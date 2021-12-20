@@ -11,6 +11,21 @@ function print(text) {
  */
 function isValid(name) {
   // ваш код...
+  
+  if (name == null) {
+    return false;
+  }
+  let nameLength = name.length;
+  if (nameLength == 0 || nameLength < 4) {
+    return false;
+  }
+  let nameSpace = name.includes(' ');
+  if (nameSpace == true) {
+    return false;
+  } 
+  name = true;
+  return name;
+
 }
 
 function sayHello() {
