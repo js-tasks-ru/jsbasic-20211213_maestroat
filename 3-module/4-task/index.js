@@ -3,16 +3,16 @@ function showSalary(users, age) {
   let name = [];
   let age1 = [];
   let value = [];
-  let res = 'text';
+  let res = '';
   for (let key=0; key < users.length; key++) {
     name.push(users[key]["name"]);
     age1.push(users[key]["age"]);
     value.push(users[key]["balance"]);
     if (age1[key] <= age) {
-      res += `\n${name[key]}, ${value[key]}`
-    }   
+      res += `${name[key]}, ${value[key]}\n`
+    }
   }
-  return res;
+  return res.trim(); // Обрезает пробелы и переносы строки в начале и в конце
 }
 // let user1 = {
 //   "balance": "$1,825.65",
