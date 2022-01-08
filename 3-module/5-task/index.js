@@ -1,13 +1,12 @@
+/*
 function getMinMax(str) {
   // ваш код...
   let arr = str.split(' ');
-  let min;
-  let max;
   let newArr= [];
   for (let i = 0; i < arr.length; i++) {
         if (isFinite(+arr[i]) !== false) {
                     newArr.push(arr[i]); 
-  }
+        }
   }
      newArr.sort((a,b)=>b-a)
   
@@ -17,10 +16,11 @@ function getMinMax(str) {
   }
   return result;
 }
-
+*/
 // let inputData = '1 и -5.8 или 10 хотя 34 + -5.3 и 73';
 // console.log(getMinMax(inputData));
  // { min: -5.8, max: 73  }
+
  function getMinMax(str) {
   // ваш код...
   let arr = str.split(' ');
