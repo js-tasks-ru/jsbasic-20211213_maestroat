@@ -29,7 +29,7 @@ function initCarousel() {
 
     position -= width;
     
-      let widthElem = 'translateX('+position+'px)';
+      let widthElem = 'translateX(-'+position+'px)';
       elem.style.transform = widthElem;
       // alert(position);
       if (position === 0)
