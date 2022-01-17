@@ -6,6 +6,7 @@ function initCarousel() {
   let elems = document.body.querySelectorAll('.carousel__slide');
   
   let width = elem.offsetWidth;
+  alert(width);
   let position = 0;
 
   // alert(elems.length);
