@@ -19,9 +19,9 @@ export default class Carousel {
   }
   slide() {
     let slide = [];
-    let data = ["penang-shrimp", "chicken-cashew", "red-curry-veggies", "chicken-springrolls"];
+    // let data = ["penang-shrimp", "chicken-cashew", "red-curry-veggies", "chicken-springrolls"];
     for (let i=0; i<this.slides.length; i++) {
-    let div = `<div class="carousel__slide" data-id="${data[i]}">
+    let div = `<div class="carousel__slide" data-id="${this.slides[i].id}">
     <img src="/assets/images/carousel/${this.slides[i].image}" class="carousel__img" alt="slide">
     <div class="carousel__caption"><span class="carousel__price">€${this.slides[i].price.toFixed(2)}</span>
     <div class="carousel__title">${this.slides[i].name}</div>
