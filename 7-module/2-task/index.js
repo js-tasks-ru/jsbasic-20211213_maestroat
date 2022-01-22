@@ -1,18 +1,13 @@
+
 import createElement from '../../assets/lib/create-element.js';
 
 export default class Modal {
   constructor() {
-    this.open();
-    this.setTitle('modal title');
-    this.setBody(node);
-    this.close();
-    this.buttonClose();
+    this.render();
   }
 
-  open() {
-    document.querySelector('body').classList.add('is-modal-open');
-    this.elem = document.createElement(`div`);
-    this.elem.innerHTML = `<div class="modal">
+  render() {
+    this.elem = createElement(`<div class="modal">
     <div class="modal__overlay"></div>
     <div class="modal__inner">
       <div class="modal__header">
@@ -20,39 +15,55 @@ export default class Modal {
           <img src="../../assets/images/icons/cross-icon.svg" alt="close-icon" />
         </button>
         <h3 class="modal__title">
-          ${this.modalTitle}
         </h3>
       </div>
       <div class="modal__body">
-        ${this.View}
       </div>
     </div>
-  </div>`
-  // document.body.appendChild(this.elem)
-  }
-  setTitle() {
-  this.modalTitle = 'modal title';
+  </div>`);
 
   }
-  setBody() {
-    console.log(this.elem.querySelector('.modal__body').childNodes);
-  this.View = node;
-    let modalBody = document.createElement('div');
-    modalBody.innerHTML = `<b>${this.View}<b/>`
-
+  open() {
+    let body = document.querySelector('body');
+    // console.log(body);
+    body.classList.add('is-modal-open');
+    body.append(this.elem);
+    this.buttonClose();
+    this.keyEsc();
+  }
+  setTitle(title) {
+    this.title = title;
+    // console.log(this.title);
+    let modalTitle = this.elem.querySelector('.modal__title');
+    // console.log(modalTitle);
+    modalTitle.insertAdjacentHTML("afterbegin", this.title)
+  }
+  setBody(node) {
+    this.View = node;
+    let modalBody = this.elem.querySelector('.modal__body');
+    // console.log(modalBody);
+    modalBody.append(this.View)
   }
   close() {
-    this.elem.querySelector('.modal').remove();
-    this.elem.querySelector('body').classList.remove('is-modal-open');
+    this.elem.remove();
+    document.querySelector('body').classList.remove('is-modal-open');
   }
   buttonClose() {
-    let modal = this.elem.querySelector('.modal');
-    let button = modal.querySelector('.modal__close');
+    let button = this.elem.querySelector('.modal__close');
     button.onclick = function () {
-      modal.remove();
-      document.querySelector('body').classList.remove('is-modal-open');
+      button.parentNode.parentNode.parentNode.remove();
+      document.body.classList.remove('is-modal-open');
     }
   }
-
+  keyEsc() {
+    document.addEventListener('keydown', (event) => {
+      if (event.code === 'Escape') {
+        this.elem.remove();
+        document.body.classList.remove('is-modal-open');
+      }
+    });
+  }
 
 }
+
+

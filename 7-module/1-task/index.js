@@ -18,6 +18,7 @@ export default class RibbonMenu {
       <img src="../../assets/images/icons/angle-icon.svg" alt="icon">
     </button>
   </div>`);
+    this.ribbonInner = this.elem.querySelector('.ribbon__inner');
   }
 
   href() {
@@ -31,7 +32,7 @@ export default class RibbonMenu {
   }
 
   scrollMenu() {
-  	let ribbonInner = this.elem.querySelector('.ribbon__inner');
+  	let ribbonInner = this.ribbonInner;
     // console.log(ribbonInner);
   	let buttonRight = this.elem.querySelector('.ribbon__arrow_right');
     // console.log(buttonRight);
@@ -64,7 +65,7 @@ export default class RibbonMenu {
     }
 
     categoriesSelect() {
-    	let ribbonInner = this.elem.querySelector('.ribbon__inner');
+      let ribbonInner = this.ribbonInner;
     	let clickHref = ribbonInner.querySelectorAll('.ribbon__item');
     	let customEvents = [];
     	for (let j=0; j<clickHref.length; j++) {
@@ -77,7 +78,7 @@ export default class RibbonMenu {
   		detail: clickHref[j].dataset.id, // уникальный идентификатора категории из её объекта
   		bubbles: true
 		});
-          console.log(customEvents[j]);
+          // console.log(customEvents[j]);
 		this.elem.dispatchEvent(customEvents[j]);
   		// return false;
   		});
