@@ -6,9 +6,7 @@ export default class StepSlider {
     this.render();
     // this.steps = steps;
     // this.value = value;
-    // this.span()
-    this.click();
-
+    this.click()
   }
   render() {
     this.elem = createElement(`
@@ -42,9 +40,7 @@ export default class StepSlider {
 
   click() {
     let slider = this.elem;
-    let steps = this.config.steps;
-    let valueThis = this.config.value;
-    let selectedSpan;
+    let step = this.config.steps;
     let firstSpan = 1;
     let sliderSteps = slider.querySelector('.slider__steps');
     let sliderValue = slider.querySelector('.slider__value');
@@ -54,33 +50,16 @@ export default class StepSlider {
       if (firstSpan == 1) {
         spanNumber[0].classList.remove('slider__step-active');
         firstSpan++;
-      }
-
-      let target = event.target;
-      while (target != this) {
-      if (target.tagName === 'SPAN') {
-        highlight(target);
-        return;
-      }
-      target = target.parentNode;
-
+      };
 
       let left = event.clientX - slider.getBoundingClientRect().left;
       let leftRelative = left / slider.offsetWidth;
 
-      let segments = steps - 1;
+      let segments = step - 1;
       let approximateValue = leftRelative * segments;
       let value = Math.round(approximateValue);
-      console.log(value);
-      let valuePercents = value / segments * 100;
-
-      for (let i = 0; i<spanNumber.length; i++) {
-        if (spanNumber[i].className === 'slider__step-active') {
-          valueThis = i+1;
-          console.log(valueThis);
-          sliderValue.innerHTML = valueThis;
-        }
-      }
+      // console.log(value);
+      let valuePercents = value/segments * 100;
 
       let thumb = slider.querySelector('.slider__thumb');
       let progress = slider.querySelector('.slider__progress');
@@ -89,19 +68,15 @@ export default class StepSlider {
       thumb.style.left = `${leftPercents}%`;
       progress.style.width = `${leftPercents}%`;
 
+      sliderValue.innerHTML = value;
 
-      new CustomEvent('slider-change', { 
+      let customEvent = new CustomEvent('slider-change', {
         detail: value,
-        bubbles: true 
+        bubbles: true
       });
-    }
-    });
-    function highlight(node) {
-      if (selectedSpan) {
-        selectedSpan.classList.remove('slider__step-active');
-      }
-      selectedSpan = node;
-      selectedSpan.classList.add('slider__step-active');
-    }
+
+      slider.dispatchEvent(customEvent)
+
+    })
   }
 }

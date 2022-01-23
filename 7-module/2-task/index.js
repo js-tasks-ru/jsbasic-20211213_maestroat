@@ -24,10 +24,8 @@ export default class Modal {
 
   }
   open() {
-    let body = document.querySelector('body');
-    // console.log(body);
-    body.classList.add('is-modal-open');
-    body.append(this.elem);
+    document.body.classList.add('is-modal-open');
+    document.body.append(this.elem);
     this.buttonClose();
     this.keyEsc();
   }

@@ -40,5 +40,25 @@ export default class CartIcon {
 
   updatePosition() {
     // ваш код ...
-  }
+    let container = document.body.querySelector('.container');
+    let containerLeft = container.getBoundingClientRect().right;
+    const windowInnerWidth = document.documentElement.clientWidth
+      // console.log(windowInnerWidth);
+    if (this.elem.offsetHeight !== null && this.elem.getBoundingClientRect().top < 0) {
+        // console.log('OK');
+        // this.elem.style.cssText = 'position: fixed; top: 50px;'
+        this.elem.style.position = 'fixed';
+        this.elem.style.top = 50 + 'px';
+        this.elem.style.zIndex = 1000;
+        let left = containerLeft + 20 + 'px';
+        let right = (windowInnerWidth - 10 - this.elem.offsetWidth) + 'px';
+        if (windowInnerWidth > 767) {
+        if ((containerLeft + this.elem.offsetWidth) > (windowInnerWidth - 10)) {
+        this.elem.style.left = right}
+        else {this.elem.style.left = left}
+        }
+
+      }
+    }
+  
 }
