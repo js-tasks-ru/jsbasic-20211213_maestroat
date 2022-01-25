@@ -40,7 +40,14 @@ export default class CartIcon {
 
   updatePosition() {
     // ваш код ...
-
+    
+    // let initialTopCoord = this.elem.getBoundingClientRect().top + window.pageYOffset;
+    // if (window.pageYOffset > initialTopCoord) {
+    //   // плавающая корзина
+    // } else {
+    //   // корзина сверху
+    // }
+    
     if (this.elem.offsetHeight !== null && this.elem.getBoundingClientRect().top < 0) {
       let container = document.body.querySelector('.container');
       let containerLeft = container.getBoundingClientRect().right;
@@ -57,9 +64,20 @@ export default class CartIcon {
         if ((containerLeft + this.elem.offsetWidth) > (windowInnerWidth - 10)) {
         this.elem.style.left = right}
         else {this.elem.style.left = left}
-        }
-
-      }
+        };
+        // if (windowInnerWidth <= 767) {
+        //   this.elem.style.position = '';
+        //   this.elem.style.top = '';
+        //   this.elem.style.left = '';
+        //   this.elem.style.zIndex = '';
+        // }
+      };
+      // if (this.elem.offsetHeight !== null && this.elem.getBoundingClientRect().top > 0) {
+      //     this.elem.style.position = '';
+      //     this.elem.style.top = '';
+      //     this.elem.style.left = '';
+      //     this.elem.style.zIndex = '';
+      // }
     }
   
 }

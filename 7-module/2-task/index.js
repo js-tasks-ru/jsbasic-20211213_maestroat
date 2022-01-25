@@ -45,13 +45,25 @@ export default class Modal {
   close() {
     this.elem.remove();
     document.querySelector('body').classList.remove('is-modal-open');
+    document.removeEventListener('keydown', (event) => {
+      if (event.code === 'Escape') {
+        this.elem.remove();
+        document.body.classList.remove('is-modal-open');
+      }
+    })
   }
   buttonClose() {
     let button = this.elem.querySelector('.modal__close');
     button.onclick = function () {
       button.parentNode.parentNode.parentNode.remove();
       document.body.classList.remove('is-modal-open');
-    }
+    };
+    document.removeEventListener('keydown', (event) => {
+      if (event.code === 'Escape') {
+        this.elem.remove();
+        document.body.classList.remove('is-modal-open');
+      }
+    })
   }
   keyEsc() {
     document.addEventListener('keydown', (event) => {
@@ -60,6 +72,12 @@ export default class Modal {
         document.body.classList.remove('is-modal-open');
       }
     });
+    document.removeEventListener('keydown', (event) => {
+      if (event.code === 'Escape') {
+        this.elem.remove();
+        document.body.classList.remove('is-modal-open');
+      }
+    })
   }
 
 }
