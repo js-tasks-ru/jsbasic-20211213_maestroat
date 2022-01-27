@@ -68,6 +68,7 @@ export default class Modal {
   keyEsc() {
     document.addEventListener('keydown', (event) => {
       if (event.code === 'Escape') {
+        console.log(this.elem);
         this.elem.remove();
         document.body.classList.remove('is-modal-open');
       }
@@ -81,5 +82,3 @@ export default class Modal {
   }
 
 }
-
-
