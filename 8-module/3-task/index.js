@@ -70,9 +70,9 @@ export default class Cart {
     // ваш код
 
     let sumPrice = 0;
+    let vsumPrice = 0;
     for (let i = 0; i < this.cartItems.length; i++) {
-      if (this.cartItems[i].count !== 0) {sumPrice = this.cartItems[i].product.price * this.cartItems[i].count;}
-        console.log(sumPrice)
+      if (this.cartItems[i].count !== 0) {sumPrice += this.cartItems[i].product.price}
     }
     return sumPrice
   }
