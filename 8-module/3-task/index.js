@@ -13,7 +13,7 @@ export default class Cart {
       product,
       count: 1
     }
-
+    // console.dir(product);
     if (product.length !== 0 || product !== null || product !== undefined) {
       for (let i = 0; i < this.cartItems.length; i++) {
         if (this.cartItems[i].product.id === product.id) {
@@ -24,7 +24,7 @@ export default class Cart {
         this.cartItems.push(cartItem);      
             this.onProductUpdate(cartItem);
         }
-        console.log(this.cartItems);
+        // console.dir(this.cartItems);
         // let results = this.cartItems.filter(item => item === this.product.id);
         // console.log(results);
         // if (results.length === 0) {
@@ -51,7 +51,8 @@ export default class Cart {
 
   isEmpty() {
     // ваш код
-    if (this.cartIcon.length === 0) {
+    // console.log(this.cartItems);
+    if (this.cartItems.length === 0) {
       return true
     } else return  false
   }
@@ -59,22 +60,19 @@ export default class Cart {
   getTotalCount() {
     // ваш код
     let sum = 0;
-    for (let i = 0; i < this.cartIcon.length; i++) {
-      if ("product" in this.cartIcon[i]) {
-        if (this.cartIcon[i].count === 0) {sum = sum + 1;}
-        else {sum = sum + this.cartIcon[i].count;}
-      }
+    for (let i = 0; i < this.cartItems.length; i++) {
+      sum = sum + 1;
     }
     return sum
   }
 
   getTotalPrice() {
     // ваш код
+
     let sumPrice = 0;
-    for (let i = 0; i < this.cartIcon.length; i++) {
-      if (this.cartIcon[i].count === 0) {sumPrice += this.cartIcon[i].product.price;}
-      else {sumPrice = this.cartIcon[i].product.price * this.cartIcon[i].count;}
-        
+    for (let i = 0; i < this.cartItems.length; i++) {
+      if (this.cartItems[i].count !== 0) {sumPrice = this.cartItems[i].product.price * this.cartItems[i].count;}
+        console.log(sumPrice)
     }
     return sumPrice
   }
