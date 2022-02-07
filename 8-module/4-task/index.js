@@ -8,28 +8,76 @@ export default class Cart {
 
   constructor(cartIcon) {
     this.cartIcon = cartIcon;
-
+    this.modal = Modal;
     this.addEventListeners();
   }
 
   addProduct(product) {
     // СКОПИРУЙТЕ СЮДЯ СВОЙ КОД
+    if (!product) {
+      return;
+    }
+    let cartItemForProduct;
+    for (let i = 0; i < this.cartItems.length; i++) {
+      if (this.cartItems[i].product.id === product.id) {
+        cartItemForProduct = this.cartItems[i];
+      }
+    }
+    if (cartItemForProduct) {
+      cartItemForProduct.count++;
+    } else {
+      cartItemForProduct = {
+        count: 1,
+        product: product,
+      }
+      this.cartItems.push(cartItemForProduct);
+    }
+    this.onProductUpdate(cartItemForProduct);
   }
 
   updateProductCount(productId, amount) {
     // СКОПИРУЙТЕ СЮДЯ СВОЙ КОД
+    let cartItemForProduct = {};
+    let cartItemIndex = 0;
+    for (let i = 0; i < this.cartItems.length; i++) {
+      if (this.cartItems[i].product.id === productId) {
+        cartItemForProduct = this.cartItems[i];
+        cartItemIndex = i;
+        // console.log(cartItemForProduct);
+      }
+    }
+    cartItemForProduct.count += amount;
+    if (cartItemForProduct.count === 0) {
+      // console.log(cartItemIndex);
+      this.cartItems = this.cartItems.splice(cartItemIndex, cartItemIndex);
+    }
+    this.onProductUpdate(cartItemForProduct);
   }
 
   isEmpty() {
     // СКОПИРУЙТЕ СЮДЯ СВОЙ КОД
+    if (this.cartItems.length === 0) {
+      return true
+    } else return  false
   }
 
   getTotalCount() {
     // СКОПИРУЙТЕ СЮДЯ СВОЙ КОД
+    let sum = 0;
+    for (let i = 0; i < this.cartItems.length; i++) {
+      sum = sum + this.cartItems[i].count;
+    }
+    return sum
   }
 
   getTotalPrice() {
     // СКОПИРУЙТЕ СЮДЯ СВОЙ КОД
+    let sumPrice = 0;
+    for (let i = 0; i < this.cartItems.length; i++) {
+      sumPrice += this.cartItems[i].product.price * this.cartItems[i].count;
+    }
+    // console.log(sumPrice);
+    return sumPrice
   }
 
   renderProduct(product, count) {
@@ -85,17 +133,128 @@ export default class Cart {
 
   renderModal() {
     // ...ваш код
+    this.modal = new Modal();
+    this.modal.open();
+    this.modal.buttonClose();
+    this.modal.keyEsc();
+    this.modal.setTitle('Your order');
+    // document.body.append(this.modal.elem);
+    // let modalTitle = document.body.querySelector('.modal__title');
+    // modalTitle.insertAdjacentHTML("afterbegin", "Your order");
+    let modalBody = document.body.querySelector('.modal__body');
+    // let Cart = createElement(`<div></div>`);
+    // modalTitle.after(Cart);
+    let Product = [];
+    for (let i = 0; i < this.cartItems.length; i++) {
+      Product[i] = this.renderProduct(this.cartItems[i].product, this.cartItems[i].count);
+      // console.log(Product[i]);  updateProductCount(productId, amount)
+      modalBody.append(Product[i]);
+
+    }
+
+    modalBody.append(this.renderOrderForm());
+
+    modalBody.addEventListener('click', (event) => {
+       let Button = event.target.closest('button');
+       if (!Button) return;
+
+      console.log('OK');
+      // let dataset = Button.target.dataset.productId;
+      // console.log(dataset);
+      let ButtonNode= Button.parentNode.parentNode.parentNode.parentNode.dataset.productId;
+      // console.log(Button.className);
+      if (Button.className === 'cart-counter__button cart-counter__button_minus') {
+      this.updateProductCount(ButtonNode, -1);}
+      if (Button.className === 'cart-counter__button cart-counter__button_plus') {
+        this.updateProductCount(ButtonNode, 1);}
+    });
+
   }
 
   onProductUpdate(cartItem) {
     // ...ваш код
+    // console.log(cartItem);
+    let modalBody = document.body.querySelector('.modal__body');
+    // console.log(modalBody);
+    if (modalBody) {
 
+      let productId = cartItem.product.id;
+      let spiciness = cartItem.count;
+      let Price = (cartItem.product.price * spiciness);
+
+      // console.log(spiciness);
+      let cart = modalBody.querySelectorAll('[data-product-id]');
+      let infoPrice = modalBody.querySelector('.cart-buttons__info-price');
+      // let info = this.getTotalPrice();
+      let info = infoPrice.innerHTML;
+      info = info.substring(1, 6);
+      info = Number(info);
+      let infoAll = [];
+      if (info !== 0) {
+        // console.log(info);
+        for (let c of cart) {
+          // console.log(c.dataset.productId);
+          let div = c.querySelector('.cart-counter');
+          let span = div.querySelector('.cart-counter__count');
+          let productPrice = c.querySelector(`.cart-product__price`);
+
+          if (c.dataset.productId === productId) {
+            // let div = c.querySelector('.cart-counter');
+            // let productPrice = c.querySelector(`.cart-product__price`);
+            productPrice.innerHTML = `€${Price.toFixed(2)}`;
+            span.innerHTML = spiciness;
+          }
+          productPrice = productPrice.innerHTML;
+          productPrice = productPrice.substring(1, 6);
+          productPrice = Number(productPrice);
+          console.log(productPrice);
+          infoAll.push(productPrice);
+        }
+        // infoAll.join('');
+        // console.log(infoAll);
+        let sum = 0;
+        infoAll.forEach(x => {sum += x});
+        info = sum;
+        infoPrice.innerHTML = `€${info.toFixed(2)}`;
+      }
+
+      if (info === 0) {
+        console.log(info);
+        this.modal.close();}
+    }
     this.cartIcon.update(this);
+
   }
 
   onSubmit(event) {
     // ...ваш код
-  };
+    let modalBody = document.body.querySelector('.modal__body');
+    let form = modalBody.querySelector('.cart-form');
+    let button = modalBody.querySelector('[type="submit"]');
+    button.classList.add('.is-loading');   
+    event.preventDefault();
+      let userFormData = new FormData(form);
+      let response = fetch('https://httpbin.org/post', {
+        method: 'POST',
+        body: userFormData,
+      });
+      response.then((response) => {
+        this.modal.setTitle('Success!');
+        for (let i = 0; i < this.cartItems.length; i++) {
+          delete(this.cartItems[i].product);
+        }
+        let div = createElement(`<div class="modal__body-inner">
+        <p>
+          Order successful! Your order is being cooked :) <br>
+          We’ll notify you about delivery time shortly.<br>
+          <img src="/assets/images/delivery.gif">
+        </p>
+      </div>`);
+        modalBody.append(div);
+        
+      }, (error) => console.log(error));
+  }
+
 
   addEventListeners() {
     this.cartIcon.elem.onclick = () => this.renderModal();
