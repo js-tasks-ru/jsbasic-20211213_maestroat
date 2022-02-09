@@ -154,6 +154,10 @@ export default class Cart {
 
     modalBody.append(this.renderOrderForm());
 
+    let form = modalBody.querySelector('.cart-form');
+    form.onsubmit = (e) => {
+      this.onSubmit(e);}
+
     modalBody.addEventListener('click', (event) => {
        let Button = event.target.closest('button');
        if (!Button) return;
@@ -175,8 +179,9 @@ export default class Cart {
     // ...ваш код
     // console.log(cartItem);
     let modalBody = document.body.querySelector('.modal__body');
-    // console.log(modalBody);
-    if (modalBody) {
+    let modalOpen = document.body.className;
+    // console.log(modalOpen);
+    if (modalOpen === "is-modal-open") {
 
       let productId = cartItem.product.id;
       let spiciness = cartItem.count;
@@ -193,25 +198,26 @@ export default class Cart {
       if (info !== 0) {
         // console.log(info);
         for (let c of cart) {
-          // console.log(c.dataset.productId);
+          // console.log(c);
           let div = c.querySelector('.cart-counter');
           let span = div.querySelector('.cart-counter__count');
           let productPrice = c.querySelector(`.cart-product__price`);
 
           if (c.dataset.productId === productId) {
-            // let div = c.querySelector('.cart-counter');
-            // let productPrice = c.querySelector(`.cart-product__price`);
             productPrice.innerHTML = `€${Price.toFixed(2)}`;
             span.innerHTML = spiciness;
+            if (spiciness === 0) {
+              c.style.display = 'none';
+            }
           }
+
           productPrice = productPrice.innerHTML;
           productPrice = productPrice.substring(1, 6);
           productPrice = Number(productPrice);
           console.log(productPrice);
           infoAll.push(productPrice);
         }
-        // infoAll.join('');
-        // console.log(infoAll);
+
         let sum = 0;
         infoAll.forEach(x => {sum += x});
         info = sum;
@@ -221,6 +227,7 @@ export default class Cart {
       if (info === 0) {
         console.log(info);
         this.modal.close();}
+
     }
     this.cartIcon.update(this);
 
@@ -228,11 +235,16 @@ export default class Cart {
 
   onSubmit(event) {
     // ...ваш код
+    event.preventDefault();
+
     let modalBody = document.body.querySelector('.modal__body');
     let form = modalBody.querySelector('.cart-form');
     let button = modalBody.querySelector('[type="submit"]');
-    button.classList.add('.is-loading');   
-    event.preventDefault();
+    button.classList.add('.is-loading');
+
+    // button.onclick = async (e) => {
+    //   e.preventDefault();
+
       let userFormData = new FormData(form);
       let response = fetch('https://httpbin.org/post', {
         method: 'POST',
@@ -241,18 +253,17 @@ export default class Cart {
       response.then((response) => {
         this.modal.setTitle('Success!');
         for (let i = 0; i < this.cartItems.length; i++) {
-          delete(this.cartItems[i].product);
+          // this.cartItems.splice(i, i);
+          delete this.cartItems[i].product;
+          delete this.cartItems[i].count;
         }
-        let div = createElement(`<div class="modal__body-inner">
-        <p>
-          Order successful! Your order is being cooked :) <br>
-          We’ll notify you about delivery time shortly.<br>
-          <img src="/assets/images/delivery.gif">
-        </p>
-      </div>`);
-        modalBody.append(div);
-        
+        console.log(this.cartItems);
+        this.cartIcon.elem.remove();
+
+        modalBody.innerHTML = '<div class="modal__body-inner">\n <p>\n Order successful! Your order is being cooked :) <br>\n  We’ll notify you about delivery time shortly.<br>\n  <img src="../../assets/images/delivery.gif">\n  </p>\n  </div>';
+
       }, (error) => console.log(error));
+
   }
 
 
