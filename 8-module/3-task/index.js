@@ -12,7 +12,7 @@ export default class Cart {
       if (this.cartItems[i].product.id === product.id) {
         cartItemForProduct = this.cartItems[i];
       }
-    } 
+    }
     if (cartItemForProduct) {
       cartItemForProduct.count++;
     } else {
@@ -33,10 +33,10 @@ export default class Cart {
         cartItemForProduct = this.cartItems[i];
         cartItemIndex = i;
       }
-    } 
+    }
     cartItemForProduct.count += amount;
     if (cartItemForProduct.count === 0) {
-      this.cartItems = this.cartItems.splice(cartItemIndex, cartItemIndex);
+      this.cartItems.splice(cartItemIndex, 1);
     }
     this.onProductUpdate(cartItemForProduct);
   }
@@ -58,7 +58,7 @@ export default class Cart {
   getTotalPrice() {
     let sumPrice = 0;
     for (let i = 0; i < this.cartItems.length; i++) {
-        sumPrice += this.cartItems[i].product.price * this.cartItems[i].count;
+      sumPrice += this.cartItems[i].product.price * this.cartItems[i].count;
     }
     return sumPrice;
   }

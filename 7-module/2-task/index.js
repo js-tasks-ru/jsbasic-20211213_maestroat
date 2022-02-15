@@ -1,4 +1,3 @@
-
 import createElement from '../../assets/lib/create-element.js';
 
 export default class Modal {
@@ -23,6 +22,7 @@ export default class Modal {
   </div>`);
 
   }
+
   open() {
     document.body.classList.add('is-modal-open');
     document.body.append(this.elem);
@@ -33,12 +33,14 @@ export default class Modal {
     this.title = title;
     // console.log(this.title);
     let modalTitle = this.elem.querySelector('.modal__title');
+    modalTitle.innerHTML = '';
     // console.log(modalTitle);
     modalTitle.insertAdjacentHTML("afterbegin", this.title)
   }
   setBody(node) {
     this.View = node;
     let modalBody = this.elem.querySelector('.modal__body');
+    modalBody.innerHTML = '';
     // console.log(modalBody);
     modalBody.append(this.View)
   }

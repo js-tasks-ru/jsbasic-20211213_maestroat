@@ -36,20 +36,17 @@ export default class Cart {
   }
 
   updateProductCount(productId, amount) {
-    // СКОПИРУЙТЕ СЮДЯ СВОЙ КОД
-    let cartItemForProduct = {};
-    let cartItemIndex = 0;
+    let cartItemForProduct;
+    let cartItemIndex;
     for (let i = 0; i < this.cartItems.length; i++) {
       if (this.cartItems[i].product.id === productId) {
         cartItemForProduct = this.cartItems[i];
         cartItemIndex = i;
-        // console.log(cartItemForProduct);
       }
     }
     cartItemForProduct.count += amount;
     if (cartItemForProduct.count === 0) {
-      // console.log(cartItemIndex);
-      this.cartItems = this.cartItems.splice(cartItemIndex, cartItemIndex);
+      this.cartItems.splice(cartItemIndex, 1);
     }
     this.onProductUpdate(cartItemForProduct);
   }
@@ -82,9 +79,7 @@ export default class Cart {
 
   renderProduct(product, count) {
     return createElement(`
-    <div class="cart-product" data-product-id="${
-      product.id
-    }">
+    <div class="cart-product" data-product-id="${product.id}">
       <div class="cart-product__img">
         <img src="/assets/images/products/${product.image}" alt="product">
       </div>
@@ -122,8 +117,8 @@ export default class Cart {
           <div class="cart-buttons__info">
             <span class="cart-buttons__info-text">total</span>
             <span class="cart-buttons__info-price">€${this.getTotalPrice().toFixed(
-              2
-            )}</span>
+      2
+    )}</span>
           </div>
           <button type="submit" class="cart-buttons__button btn-group__button button">order</button>
         </div>
@@ -135,8 +130,6 @@ export default class Cart {
     // ...ваш код
     this.modal = new Modal();
     this.modal.open();
-    this.modal.buttonClose();
-    this.modal.keyEsc();
     this.modal.setTitle('Your order');
     // document.body.append(this.modal.elem);
     // let modalTitle = document.body.querySelector('.modal__title');
@@ -145,32 +138,35 @@ export default class Cart {
     // let Cart = createElement(`<div></div>`);
     // modalTitle.after(Cart);
     let Product = [];
+
     for (let i = 0; i < this.cartItems.length; i++) {
       Product[i] = this.renderProduct(this.cartItems[i].product, this.cartItems[i].count);
       // console.log(Product[i]);  updateProductCount(productId, amount)
       modalBody.append(Product[i]);
-
     }
 
     modalBody.append(this.renderOrderForm());
 
     let form = modalBody.querySelector('.cart-form');
     form.onsubmit = (e) => {
-      this.onSubmit(e);}
+      this.onSubmit(e);
+    }
 
     modalBody.addEventListener('click', (event) => {
-       let Button = event.target.closest('button');
-       if (!Button) return;
+      let Button = event.target.closest('button');
+      if (!Button) return;
 
       console.log('OK');
       // let dataset = Button.target.dataset.productId;
       // console.log(dataset);
-      let ButtonNode= Button.parentNode.parentNode.parentNode.parentNode.dataset.productId;
+
+      const cartItemId = Button.closest('.cart-product').dataset.productId;
+
       // console.log(Button.className);
       if (Button.className === 'cart-counter__button cart-counter__button_minus') {
-      this.updateProductCount(ButtonNode, -1);}
+        this.updateProductCount(cartItemId, -1);}
       if (Button.className === 'cart-counter__button cart-counter__button_plus') {
-        this.updateProductCount(ButtonNode, 1);}
+        this.updateProductCount(cartItemId, 1);}
     });
 
   }
@@ -245,24 +241,27 @@ export default class Cart {
     // button.onclick = async (e) => {
     //   e.preventDefault();
 
-      let userFormData = new FormData(form);
-      let response = fetch('https://httpbin.org/post', {
-        method: 'POST',
-        body: userFormData,
-      });
-      response.then((response) => {
-        this.modal.setTitle('Success!');
-        for (let i = 0; i < this.cartItems.length; i++) {
-          // this.cartItems.splice(i, i);
-          delete this.cartItems[i].product;
-          delete this.cartItems[i].count;
-        }
-        console.log(this.cartItems);
-        this.cartIcon.elem.remove();
+    let userFormData = new FormData(form);
+    let response = fetch('https://httpbin.org/post', {
+      method: 'POST',
+      body: userFormData,
+    });
 
-        modalBody.innerHTML = '<div class="modal__body-inner">\n <p>\n Order successful! Your order is being cooked :) <br>\n  We’ll notify you about delivery time shortly.<br>\n  <img src="../../assets/images/delivery.gif">\n  </p>\n  </div>';
+    response.then((response) => {
+      this.modal.setTitle('Success!');
+      this.cartItems = [];
+      this.cartIcon.update(this);
 
-      }, (error) => console.log(error));
+      modalBody.innerHTML = `<div class="modal__body-inner">
+        <p>
+        Order successful! Your order is being cooked :) <br>
+    We’ll notify you about delivery time shortly.<br>
+    <img src="/assets/images/delivery.gif">
+      </p>
+      </div>
+        `;
+
+    }, (error) => console.log(error));
 
   }
 
@@ -271,4 +270,3 @@ export default class Cart {
     this.cartIcon.elem.onclick = () => this.renderModal();
   }
 }
-

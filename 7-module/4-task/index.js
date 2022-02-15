@@ -7,7 +7,7 @@ export default class StepSlider {
     // this.steps = steps;
     // this.value = value;
     // this.span()
-    this.click();
+    // this.click();
     this.clickDrag();
   }
   render() {
@@ -39,39 +39,7 @@ export default class StepSlider {
     return spanCreate.join('');
   }
 
-  click() {
-    let slider = this.elem;
-    let step = this.config.steps;
-    let firstSpan = 1;
-    let sliderSteps = slider.querySelector('.slider__steps');
-    let sliderValue = slider.querySelector('.slider__value');
-    let spanNumber = sliderSteps.querySelectorAll('span');
-    this.elem.addEventListener('click', function(event) {
-      if (firstSpan == 1) {
-        spanNumber[0].classList.remove('slider__step-active');
-        firstSpan++;
-      };
-      let left = event.clientX - slider.getBoundingClientRect().left;
-      let leftRelative = left / slider.offsetWidth;
-      let segments = step - 1;
-      let approximateValue = leftRelative * segments;
-      let value = Math.round(approximateValue);
-      // console.log(value);
-      let valuePercents = value/segments * 100;
-      let thumb = slider.querySelector('.slider__thumb');
-      let progress = slider.querySelector('.slider__progress');
-      let leftPercents = valuePercents;
-      // console.log(valuePercents);
-      thumb.style.left = `${leftPercents}%`;
-      progress.style.width = `${leftPercents}%`;
-      sliderValue.innerHTML = value;
-      let customEvent = new CustomEvent('slider-change', {
-        detail: value,
-        bubbles: true
-      });
-      slider.dispatchEvent(customEvent)
-    })
-  }
+
   clickDrag() {
     let slider = this.elem;
     let step = this.config.steps;
