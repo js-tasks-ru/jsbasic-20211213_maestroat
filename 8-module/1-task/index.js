@@ -39,27 +39,41 @@ export default class CartIcon {
   }
 
   updatePosition() {
-    // ваш код ...
 
-    if (this.elem.offsetHeight !== null && this.elem.getBoundingClientRect().top < 0) {
+      if (!this.elem.offsetWidth) {
+        return;
+      }
+      // let initialTopCoord = this.elem.getBoundingClientRect().top + window.pageYOffset;
+      // if (window.pageYOffset > initialTopCoord && this.elem.offsetHeight !== null) {
+      if (!this.initialTopCoord) {
+        this.initialTopCoord = this.elem.getBoundingClientRect().top + window.pageYOffset;
+      }
+      if (window.pageYOffset > this.initialTopCoord) {
       let container = document.body.querySelector('.container');
       let containerLeft = container.getBoundingClientRect().right;
       const windowInnerWidth = document.documentElement.clientWidth;
-        // console.log(windowInnerWidth);
-        // console.log('OK');
         // this.elem.style.cssText = 'position: fixed; top: 50px;';
         this.elem.style.position = 'fixed';
         this.elem.style.top = 50 + 'px';
+        this.elem.style.right = '10px';
         this.elem.style.zIndex = 1000;
-        let left = containerLeft + 20 + 'px';
-        let right = (windowInnerWidth - 10 - this.elem.offsetWidth) + 'px';
-        if (windowInnerWidth > 767) {
-        if ((containerLeft + this.elem.offsetWidth) > (windowInnerWidth - 10)) {
-        this.elem.style.left = right}
-        else {this.elem.style.left = left}
-        }
 
+      let leftIndent = Math.min(containerLeft + 20,
+        windowInnerWidth - this.elem.offsetWidth - 10) + 'px';
+        this.elem.style.left = leftIndent;
+
+        if (windowInnerWidth <= 767) {
+          this.elem.style.position = '';
+          this.elem.style.top = '';
+          this.elem.style.left = '';
+          this.elem.style.zIndex = '';
+        }
+      } else {
+          this.elem.style.position = '';
+          this.elem.style.top = '';
+          this.elem.style.left = '';
+          this.elem.style.zIndex = '';
       }
     }
-  
+
 }

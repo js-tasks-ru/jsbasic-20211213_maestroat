@@ -6,7 +6,9 @@ export default class StepSlider {
     this.render();
     // this.steps = steps;
     // this.value = value;
-    this.click()
+    // this.span()
+    this.click();
+
   }
   render() {
     this.elem = createElement(`
@@ -26,7 +28,7 @@ export default class StepSlider {
   }
   span() {
     let spanCreate = [];
-    // console.log(this.config.steps, this.config.value);
+    console.log(this.config.steps, this.config.value);
     for (let i = 0; i<this.config.steps; i++) {
       let span = `<span></span>`;
       if (i === 0) {
@@ -47,13 +49,13 @@ export default class StepSlider {
     let spanNumber = sliderSteps.querySelectorAll('span');
 
     this.elem.addEventListener('click', function(event) {
-      if (firstSpan == 1) {
+      if (firstSpan === 1) {
         spanNumber[0].classList.remove('slider__step-active');
         firstSpan++;
-      };
+      }
 
       let left = event.clientX - slider.getBoundingClientRect().left;
-      let leftRelative = left / slider.offsetWidth;
+      let leftRelative = left/slider.offsetWidth;
 
       let segments = step - 1;
       let approximateValue = leftRelative * segments;
@@ -78,5 +80,6 @@ export default class StepSlider {
       slider.dispatchEvent(customEvent)
 
     })
+
   }
 }
